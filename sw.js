@@ -1,25 +1,28 @@
-const CACHE_NAME = 'apontamento-florestal-v3';
+const CACHE_NAME = 'apontamento-florestal-v4';
 
-// Lista de arquivos com caminhos relativos universais
+// Detecta automaticamente o caminho base no GitHub Pages
+const BASE_PATH = self.location.pathname.substring(0, self.location.pathname.lastIndexOf('/'));
+
 const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  `${BASE_PATH}/`,
+  `${BASE_PATH}/index.html`,
+  `${BASE_PATH}/manifest.json`,
+  `${BASE_PATH}/icon-192.png`,
+  `${BASE_PATH}/icon-512.png`
 ];
 
-// Instalação: Baixa os arquivos para o cache local do dispositivo
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      // Usa addAll com captura individual para evitar que uma imagem faltante quebre a instalação
+      return Promise.allSettled(
+        ASSETS_TO_CACHE.map(url => cache.add(url))
+      );
     })
   );
   self.skipWaiting();
 });
 
-// Ativação: Deleta caches de versões antigas se houver atualização
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -35,17 +38,18 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Interceptação: Busca no cache primeiro; se não tiver, busca na rede
 self.addEventListener('fetch', (event) => {
+  // Apenas intercepta requisições de navegação ou arquivos da mesma origem
+  if (event.request.method !== 'GET') return;
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;
       }
       return fetch(event.request).catch(() => {
-        // Retorno de segurança para navegação principal em caso de offline total
         if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
+          return caches.match(`${BASE_PATH}/index.html`);
         }
       });
     })
