@@ -1,17 +1,15 @@
-const CACHE_NAME = 'apontamento-florestal-v2';
+const CACHE_NAME = 'apontamento-florestal-v3';
 
-// Garante o caminho exato dentro do repositório apontamento-florestal
-const GH_PATH = '/apontamento-florestal';
-
+// Lista de arquivos com caminhos relativos universais
 const ASSETS_TO_CACHE = [
-  `${GH_PATH}/`,
-  `${GH_PATH}/index.html`,
-  `${GH_PATH}/manifest.json`,
-  `${GH_PATH}/icon-192.png`,
-  `${GH_PATH}/icon-512.png`
+  './',
+  './index.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
-// Instalação: Salva todos os arquivos no cache do celular
+// Instalação: Baixa os arquivos para o cache local do dispositivo
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -21,7 +19,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Ativação: Limpa versões antigas do cache
+// Ativação: Deleta caches de versões antigas se houver atualização
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -37,11 +35,19 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Interceptação: Serve os arquivos do cache quando estiver sem internet (Offline)
+// Interceptação: Busca no cache primeiro; se não tiver, busca na rede
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request).catch(() => {
+        // Retorno de segurança para navegação principal em caso de offline total
+        if (event.request.mode === 'navigate') {
+          return caches.match('./index.html');
+        }
+      });
     })
   );
 });
