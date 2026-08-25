@@ -1,0 +1,22 @@
+{
+  "name": "Apontamento Florestal",
+  "short_name": "Apontamento",
+  "description": "Sistema Offline de Apontamento Florestal e Rastreabilidade FSC",
+  "start_url": "./apontamento_florestal.html",
+  "display": "standalone",
+  "background_color": "#1b5e20",
+  "theme_color": "#1b5e20",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
