@@ -1,12 +1,17 @@
-const CACHE_NAME = 'apontamento-florestal-v1';
+const CACHE_NAME = 'apontamento-florestal-v2';
+
+// Garante o caminho exato dentro do repositório apontamento-florestal
+const GH_PATH = '/apontamento-florestal';
+
 const ASSETS_TO_CACHE = [
-  './apontamento_florestal.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  `${GH_PATH}/`,
+  `${GH_PATH}/index.html`,
+  `${GH_PATH}/manifest.json`,
+  `${GH_PATH}/icon-192.png`,
+  `${GH_PATH}/icon-512.png`
 ];
 
-// Instalação: Salva todos os arquivos essenciais no cache do navegador
+// Instalação: Salva todos os arquivos no cache do celular
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -16,7 +21,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Ativação: Limpa caches antigos, se houver
+// Ativação: Limpa versões antigas do cache
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -32,7 +37,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Interceptação de requisições: Serve do Cache se estiver sem internet
+// Interceptação: Serve os arquivos do cache quando estiver sem internet (Offline)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
