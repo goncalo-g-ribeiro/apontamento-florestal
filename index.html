@@ -31,30 +31,30 @@
         body { 
             background-color: var(--bg); 
             color: var(--text); 
-            padding: clamp(8px, 2vw, 24px); 
+            padding: 12px; 
             padding-bottom: 90px;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         
         header { 
             background: var(--primary); 
             color: white; 
-            padding: clamp(12px, 3vw, 20px); 
-            border-radius: 8px; 
+            padding: 16px; 
+            border-radius: 10px; 
             text-align: center; 
             margin-bottom: 12px; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
         }
-        header h1 { font-size: clamp(1rem, 2.5vw, 1.6rem); text-transform: uppercase; letter-spacing: 0.5px; }
-        header small { font-size: clamp(0.75rem, 1.8vw, 0.95rem); opacity: 0.9; }
+        header h1 { font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        header small { font-size: 0.85rem; opacity: 0.9; display: block; margin-top: 2px; }
 
         .status-banner {
             padding: 10px;
             text-align: center;
             font-weight: bold;
-            font-size: 0.85rem;
-            border-radius: 6px;
+            font-size: 0.9rem;
+            border-radius: 8px;
             margin-bottom: 14px;
         }
         .online { background-color: #c8e6c9; color: #2e7d32; }
@@ -62,122 +62,126 @@
 
         .section-card { 
             background: var(--card-bg); 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            padding: clamp(10px, 2.5vw, 20px); 
-            margin-bottom: 14px; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 10px; 
+            padding: 16px; 
+            margin-bottom: 16px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         
         .section-title { 
-            font-size: clamp(0.85rem, 2vw, 1.1rem); 
-            font-weight: bold; 
+            font-size: 1rem; 
+            font-weight: 700; 
             color: var(--primary); 
             border-bottom: 2px solid var(--primary-light); 
             padding-bottom: 6px; 
-            margin-bottom: 12px; 
+            margin-bottom: 14px; 
             text-transform: uppercase; 
         }
 
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: clamp(0.8rem, 1.8vw, 0.95rem); font-weight: 600; margin-bottom: 4px; color: #424242; }
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #333; }
         
         input[type="text"], input[type="number"], select { 
             width: 100%; 
-            padding: clamp(10px, 1.8vw, 14px); 
+            padding: 12px; 
             border: 1px solid var(--border); 
-            border-radius: 6px; 
-            font-size: clamp(0.9rem, 2vw, 1.05rem); 
+            border-radius: 8px; 
+            font-size: 1rem; 
             background-color: #fafafa; 
-            min-height: 44px;
+            min-height: 48px;
         }
         input:focus, select:focus { border-color: var(--primary); outline: none; background-color: #fff; }
 
-        /* GRIDS RESPONSIVOS COM AUTO-FIT */
+        /* REORGANIZAÇÃO DOS GRIDS RESPONSIVOS (MOBILE-FIRST PARA S23 ULTRA E SIMILARES) */
         .grid-2, .grid-3 {
             display: grid;
-            gap: 10px;
-            grid-template-columns: 1fr;
+            gap: 12px;
+            grid-template-columns: 1fr; /* Padrão: 1 coluna em celulares portrait */
         }
 
-        @media (min-width: 480px) {
+        /* Tablets e celulares em modo paisagem / dobráveis */
+        @media (min-width: 601px) {
             .grid-2 { grid-template-columns: repeat(2, 1fr); }
             .grid-3 { grid-template-columns: repeat(2, 1fr); }
         }
 
-        @media (min-width: 768px) {
+        /* Desktops e telas grandes */
+        @media (min-width: 901px) {
             .grid-3 { grid-template-columns: repeat(3, 1fr); }
         }
 
         /* Radio Buttons Responsivos */
-        .radio-tile-group { display: flex; gap: 8px; width: 100%; }
+        .radio-tile-group { display: flex; gap: 10px; width: 100%; }
         .radio-tile { flex: 1; }
         .radio-tile input { display: none; }
         .radio-tile label { 
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 44px;
-            padding: 8px; 
+            min-height: 48px;
+            padding: 10px; 
             border: 1px solid var(--border); 
-            border-radius: 6px; 
+            border-radius: 8px; 
             text-align: center; 
             background: #fff; 
             cursor: pointer; 
-            font-size: clamp(0.85rem, 1.8vw, 1rem); 
+            font-size: 0.95rem; 
             font-weight: 600; 
         }
         .radio-tile input:checked + label { background-color: #e8f5e9; border-color: var(--primary); color: var(--primary); font-weight: bold; }
 
-        .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
-        .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: clamp(0.8rem, 1.8vw, 0.95rem); }
-        .checkbox-item input { width: 22px; height: 22px; flex-shrink: 0; }
+        .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
+        .checkbox-item { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; }
+        .checkbox-item input { width: 24px; height: 24px; flex-shrink: 0; }
 
         /* Botões */
         .btn { 
             width: 100%; 
-            padding: clamp(12px, 2vw, 16px); 
+            padding: 14px; 
             border: none; 
-            border-radius: 6px; 
-            font-size: clamp(0.9rem, 2vw, 1.1rem); 
+            border-radius: 8px; 
+            font-size: 1rem; 
             font-weight: bold; 
             cursor: pointer; 
             text-align: center; 
             text-transform: uppercase; 
             margin-top: 8px; 
-            min-height: 48px;
+            min-height: 50px;
         }
         .btn-primary { background: var(--primary); color: white; }
         .btn-whatsapp { background: #25d366; color: white; }
-        .btn-danger { background: var(--danger); color: white; padding: 6px 10px; font-size: 0.75rem; width: auto; margin: 0; }
+        .btn-danger { background: var(--danger); color: white; padding: 6px 12px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 4px; }
 
-        /* TABELA RESPONSIVA (VIRANDO CARDS EM TELAS PEQUENAS) */
+        /* TABELA RESPONSIVA EM CARDS EM TELAS ATÉ 600PX */
         .table-container { width: 100%; overflow-x: auto; }
         
-        .records-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
-        .records-table th, .records-table td { border: 1px solid var(--border); padding: 8px; text-align: left; }
+        .records-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        .records-table th, .records-table td { border: 1px solid var(--border); padding: 10px; text-align: left; }
         .records-table th { background: #eee; }
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: white; display: inline-block; }
         .badge-pending { background: #f57c00; }
         .badge-sent { background: #388e3c; }
 
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
             .records-table, .records-table thead, .records-table tbody, .records-table th, .records-table td, .records-table tr { 
                 display: block; 
             }
             .records-table thead { display: none; }
             .records-table tr { 
-                margin-bottom: 10px; 
-                border: 1px solid var(--border); 
-                border-radius: 6px; 
+                margin-bottom: 12px; 
+                border: 1px solid #e0e0e0; 
+                border-radius: 8px; 
                 background: #fff;
-                padding: 8px;
+                padding: 10px;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             }
             .records-table td { 
                 border: none; 
                 display: flex; 
                 justify-content: space-between; 
                 align-items: center; 
-                padding: 6px 0;
+                padding: 8px 0;
                 border-bottom: 1px dashed #eee;
             }
             .records-table td:last-child { border-bottom: none; }
@@ -422,16 +426,14 @@
                 <tbody id="listaRegistros"></tbody>
             </table>
         </div>
-        <button onclick="transmitirConsolidadoDia()" class="btn btn-whatsapp" style="margin-top: 12px;">
+        <button onclick="transmitirConsolidadoDia()" class="btn btn-whatsapp" style="margin-top: 14px;">
             📲 Transmitir Relatório do Dia via WhatsApp
         </button>
     </div>
 
     <script>
-        // NÚMERO DO WHATSAPP FIXO (DDD 49 - BRASIL)
         const DESTINO_WHATSAPP = "5549999220040";
 
-        // BANCO DE DADOS LOCAL (IndexedDB)
         let db;
         const request = indexedDB.open("LogisticaFlorestalDB", 1);
 
@@ -448,7 +450,6 @@
             renderizarTabela();
         };
 
-        // MONITORA STATUS DE CONEXÃO ONLINE / OFFLINE
         function updateStatus() {
             const bar = document.getElementById('status-bar');
             if (navigator.onLine) {
@@ -463,7 +464,6 @@
         window.addEventListener('offline', updateStatus);
         updateStatus();
 
-        // LÓGICA DE EXIBIÇÃO DO CAMPO OUTRO DESTINO
         function tratarSelecaoDestino() {
             const select = document.getElementById("destinoSelect");
             const grupoOutro = document.getElementById("grupoOutroDestino");
@@ -480,7 +480,6 @@
             }
         }
 
-        // SALVAR APONTAMENTO NO INDEXEDDB
         document.getElementById("bcfForm").addEventListener("submit", function(e) {
             e.preventDefault();
 
@@ -530,7 +529,6 @@
             };
         });
 
-        // RENDERIZAR TABELA RESPONSIVA COM DATA-LABELS
         function renderizarTabela() {
             const tbody = document.getElementById("listaRegistros");
             tbody.innerHTML = "";
@@ -562,7 +560,6 @@
             };
         }
 
-        // ENVIAR BCF ÚNICO VIA WHATSAPP
         function enviarWhatsappIndividal(id) {
             const tx = db.transaction("apontamentos", "readwrite");
             const store = tx.objectStore("apontamentos");
@@ -597,7 +594,6 @@
             };
         }
 
-        // ENVIAR RELATÓRIO CONSOLIDADO DO DIA VIA WHATSAPP
         function transmitirConsolidadoDia() {
             const tx = db.transaction("apontamentos", "readonly");
             const store = tx.objectStore("apontamentos");
@@ -628,7 +624,6 @@
             };
         }
 
-        // DELETAR REGISTRO LOCAL
         function deletarRegistro(id) {
             if(confirm("Deseja remover este registro localmente?")) {
                 const tx = db.transaction("apontamentos", "readwrite");
@@ -640,7 +635,6 @@
             }
         }
 
-        // REGISTRO DO SERVICE WORKER (PWA)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
