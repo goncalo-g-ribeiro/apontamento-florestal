@@ -7,6 +7,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1b5e20">
     <!-- Suporte para iOS / iPhone -->
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Apontamento">
@@ -46,6 +47,17 @@
         header h1 { font-size: clamp(1rem, 2.5vw, 1.6rem); text-transform: uppercase; letter-spacing: 0.5px; }
         header small { font-size: clamp(0.75rem, 1.8vw, 0.95rem); opacity: 0.9; }
 
+        .status-banner {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            margin-bottom: 14px;
+        }
+        .online { background-color: #c8e6c9; color: #2e7d32; }
+        .offline { background-color: #ffcdd2; color: #c62828; }
+
         .section-card { 
             background: var(--card-bg); 
             border: 1px solid var(--border); 
@@ -67,25 +79,23 @@
         .form-group { margin-bottom: 12px; }
         label { display: block; font-size: clamp(0.8rem, 1.8vw, 0.95rem); font-weight: 600; margin-bottom: 4px; color: #424242; }
         
-        input[type="text"], input[type="number"], select { 
+        input[type="text"], input[type="number"], input[type="date"], select { 
             width: 100%; 
             padding: clamp(10px, 1.8vw, 14px); 
             border: 1px solid var(--border); 
             border-radius: 6px; 
             font-size: clamp(0.9rem, 2vw, 1.05rem); 
             background-color: #fafafa; 
-            min-height: 44px; /* Otimizado para o toque em telas mobile */
+            min-height: 44px;
         }
         input:focus, select:focus { border-color: var(--primary); outline: none; background-color: #fff; }
 
-        /* GRIDS RESPONSIVOS COM AUTO-FIT (Adaptam automaticamente a qualquer tela) */
         .grid-2, .grid-3 {
             display: grid;
             gap: 10px;
-            grid-template-columns: 1fr; /* Padrão 1 coluna para telas pequenas */
+            grid-template-columns: 1fr;
         }
 
-        /* Dispositivos Médios e Grandes (Smartphones Maiores, Tablets, Desktop) */
         @media (min-width: 480px) {
             .grid-2 { grid-template-columns: repeat(2, 1fr); }
             .grid-3 { grid-template-columns: repeat(2, 1fr); }
@@ -95,7 +105,6 @@
             .grid-3 { grid-template-columns: repeat(3, 1fr); }
         }
 
-        /* Radio Buttons Responsivos */
         .radio-tile-group { display: flex; gap: 8px; width: 100%; }
         .radio-tile { flex: 1; }
         .radio-tile input { display: none; }
@@ -115,11 +124,6 @@
         }
         .radio-tile input:checked + label { background-color: #e8f5e9; border-color: var(--primary); color: var(--primary); font-weight: bold; }
 
-        .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
-        .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: clamp(0.8rem, 1.8vw, 0.95rem); }
-        .checkbox-item input { width: 22px; height: 22px; flex-shrink: 0; }
-
-        /* Botões */
         .btn { 
             width: 100%; 
             padding: clamp(12px, 2vw, 16px); 
@@ -137,22 +141,18 @@
         .btn-whatsapp { background: #25d366; color: white; }
         .btn-danger { background: var(--danger); color: white; padding: 6px 10px; font-size: 0.75rem; width: auto; margin: 0; }
 
-        /* TABELA ULTRA-RESPONSIVA (Vira Cards em Telas Pequenas) */
         .table-container { width: 100%; overflow-x: auto; }
-        
         .records-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
         .records-table th, .records-table td { border: 1px solid var(--border); padding: 8px; text-align: left; }
         .records-table th { background: #eee; }
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: white; display: inline-block; }
         .badge-pending { background: #f57c00; }
-        .badge-sent { background: #388e3c; }
 
-        /* Comportamento de Cards para telas < 500px (Celulares menores e dobráveis) */
         @media (max-width: 500px) {
             .records-table, .records-table thead, .records-table tbody, .records-table th, .records-table td, .records-table tr { 
                 display: block; 
             }
-            .records-table thead { display: none; } /* Esconde o cabeçalho tradicional */
+            .records-table thead { display: none; }
             .records-table tr { 
                 margin-bottom: 10px; 
                 border: 1px solid var(--border); 
@@ -177,13 +177,227 @@
         }
 
         .hidden { display: none; }
-        // REGISTRO DO SERVICE WORKER (PWA)
-        if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-       .then((reg) => console.log('PWA Service Worker registrado com sucesso!', reg))
-       .catch((err) => console.error('Erro ao registrar Service Worker:', err));
-         });
-       }
     </style>
 </head>
+<body>
+
+    <header>
+        <h1>Apontamento Florestal</h1>
+        <small>Rastreabilidade FSC & Operações de Campo</small>
+    </header>
+
+    <div id="status-bar" class="status-banner online">Conectado - Modo Online</div>
+
+    <form id="form-apontamento">
+        <div class="section-card">
+            <div class="section-title">1. Dados Operacionais</div>
+            <div class="grid-3">
+                <div class="form-group">
+                    <label for="data">Data:</label>
+                    <input type="date" id="data" required>
+                </div>
+                <div class="form-group">
+                    <label for="talhao">Talhão / Projeto:</label>
+                    <input type="text" id="talhao" placeholder="Ex: Talhão 08" required>
+                </div>
+                <div class="form-group">
+                    <label for="operacao">Operação:</label>
+                    <select id="operacao" required>
+                        <option value="">Selecione...</option>
+                        <option value="Corte / Colheita">Corte / Colheita</option>
+                        <option value="Carregamento">Carregamento</option>
+                        <option value="Transporte">Transporte de Toras</option>
+                        <option value="Baldeio">Baldeio / Forwarder</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">2. Apontamento de Volume & Produto</div>
+            <div class="grid-3">
+                <div class="form-group">
+                    <label for="especie">Espécie:</label>
+                    <select id="especie" required>
+                        <option value="Pinus taeda">Pinus taeda</option>
+                        <option value="Pinus elliottii">Pinus elliottii</option>
+                        <option value="Eucalyptus spp">Eucalyptus spp</option>
+                        <option value="Nativa">Nativa (Autorizada)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="volume">Volume (m³):</label>
+                    <input type="number" id="volume" step="0.01" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label for="maquina">Equipamento / Placa:</label>
+                    <input type="text" id="maquina" placeholder="Ex: Harvester 01 / ABC-1234" required>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar Apontamento Offline</button>
+    </form>
+
+    <div class="section-card" style="margin-top: 20px;">
+        <div class="section-title">3. Registros Salvos no Celular</div>
+        <div class="table-container">
+            <table class="records-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Talhão</th>
+                        <th>Operação</th>
+                        <th>Volume</th>
+                        <th>Status</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-registros">
+                    <!-- Registros inseridos via JS -->
+                </tbody>
+            </table>
+        </div>
+        <button id="btn-exportar" class="btn btn-whatsapp" style="margin-top: 15px;">Exportar para WhatsApp / Excel</button>
+    </div>
+
+    <script>
+        // Configuração do IndexedDB Local
+        let db;
+        const request = indexedDB.open("ApontamentoFlorestalDB", 1);
+
+        request.onupgradeneeded = (e) => {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains("apontamentos")) {
+                db.createObjectStore("apontamentos", { keyPath: "id", autoIncrement: true });
+            }
+        };
+
+        request.onsuccess = (e) => {
+            db = e.target.result;
+            carregarRegistros();
+        };
+
+        request.onerror = (e) => {
+            console.error("Erro ao abrir IndexedDB:", e);
+        };
+
+        // Data Atual Padrão
+        document.getElementById('data').valueAsDate = new Date();
+
+        // Monitoramento de Conexão Online/Offline
+        function updateStatus() {
+            const bar = document.getElementById('status-bar');
+            if (navigator.onLine) {
+                bar.textContent = "Conectado - Modo Online";
+                bar.className = "status-banner online";
+            } else {
+                bar.textContent = "Offline - Apontamentos salvos na memória local";
+                bar.className = "status-banner offline";
+            }
+        }
+        window.addEventListener('online', updateStatus);
+        window.addEventListener('offline', updateStatus);
+        updateStatus();
+
+        // Salvar Apontamento no IndexedDB
+        document.getElementById('form-apontamento').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const novoRegistro = {
+                data: document.getElementById('data').value,
+                talhao: document.getElementById('talhao').value,
+                operacao: document.getElementById('operacao').value,
+                especie: document.getElementById('especie').value,
+                volume: parseFloat(document.getElementById('volume').value),
+                maquina: document.getElementById('maquina').value,
+                dataRegistro: new Date().toLocaleString('pt-BR')
+            };
+
+            const tx = db.transaction("apontamentos", "readwrite");
+            const store = tx.objectStore("apontamentos");
+            store.add(novoRegistro);
+
+            tx.oncomplete = () => {
+                alert("Apontamento salvo localmente com sucesso!");
+                document.getElementById('form-apontamento').reset();
+                document.getElementById('data').valueAsDate = new Date();
+                carregarRegistros();
+            };
+        });
+
+        // Renderizar registros na tabela
+        function carregarRegistros() {
+            const tbody = document.getElementById('lista-registros');
+            tbody.innerHTML = '';
+
+            const tx = db.transaction("apontamentos", "readonly");
+            const store = tx.objectStore("apontamentos");
+            const request = store.openCursor();
+
+            request.onsuccess = (e) => {
+                const cursor = e.target.result;
+                if (cursor) {
+                    const r = cursor.value;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td data-label="Data">${r.data}</td>
+                        <td data-label="Talhão">${r.talhao}</td>
+                        <td data-label="Operação">${r.operacao}</td>
+                        <td data-label="Volume">${r.volume} m³</td>
+                        <td data-label="Status"><span class="badge badge-pending">Salvo Local</span></td>
+                        <td data-label="Ação"><button class="btn-danger" onclick="excluirRegistro(${cursor.key})">Excluir</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                    cursor.continue();
+                }
+            };
+        }
+
+        // Excluir Registro
+        window.excluirRegistro = function(id) {
+            if (confirm("Deseja realmente excluir este apontamento?")) {
+                const tx = db.transaction("apontamentos", "readwrite");
+                const store = tx.objectStore("apontamentos");
+                store.delete(id);
+                tx.oncomplete = () => carregarRegistros();
+            }
+        };
+
+        // Exportar para Relatório/WhatsApp
+        document.getElementById('btn-exportar').addEventListener('click', () => {
+            const tx = db.transaction("apontamentos", "readonly");
+            const store = tx.objectStore("apontamentos");
+            const request = store.getAll();
+
+            request.onsuccess = () => {
+                const dados = request.result;
+                if (dados.length === 0) {
+                    alert("Nenhum registro encontrado para exportar.");
+                    return;
+                }
+
+                let texto = "*RELATÓRIO DE APONTAMENTO FLORESTAL*\n\n";
+                dados.forEach((item, index) => {
+                    texto += `*${index + 1}. ${item.talhao}* (${item.data})\n`;
+                    texto += `• Operação: ${item.operacao}\n`;
+                    texto += `• Produto/Espécie: ${item.especie}\n`;
+                    texto += `• Volume: ${item.volume} m³\n`;
+                    texto += `• Equipamento: ${item.maquina}\n\n`;
+                });
+
+                const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
+                window.open(url, '_blank');
+            };
+        });
+
+        // REGISTRO DO SERVICE WORKER (PWA)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((reg) => console.log('PWA Service Worker registrado com sucesso!', reg))
+                    .catch((err) => console.error('Erro ao registrar Service Worker:', err));
+            });
+        }
+    </script>
+</body>
+</html>
