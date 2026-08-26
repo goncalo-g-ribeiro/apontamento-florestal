@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Apontamento Florestal Offline</title>
+
+    <!-- Suporte PWA e Mobile -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1b5e20">
-    <!-- Suporte para iOS / iPhone -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Apontamento">
     <link rel="apple-touch-icon" href="icon-192.png">
+
     <style>
         :root {
             --primary: #1b5e20;
@@ -41,7 +43,7 @@
             padding: clamp(12px, 3vw, 20px); 
             border-radius: 8px; 
             text-align: center; 
-            margin-bottom: 16px; 
+            margin-bottom: 12px; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
         }
         header h1 { font-size: clamp(1rem, 2.5vw, 1.6rem); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -79,7 +81,7 @@
         .form-group { margin-bottom: 12px; }
         label { display: block; font-size: clamp(0.8rem, 1.8vw, 0.95rem); font-weight: 600; margin-bottom: 4px; color: #424242; }
         
-        input[type="text"], input[type="number"], input[type="date"], select { 
+        input[type="text"], input[type="number"], select { 
             width: 100%; 
             padding: clamp(10px, 1.8vw, 14px); 
             border: 1px solid var(--border); 
@@ -90,6 +92,7 @@
         }
         input:focus, select:focus { border-color: var(--primary); outline: none; background-color: #fff; }
 
+        /* GRIDS RESPONSIVOS COM AUTO-FIT */
         .grid-2, .grid-3 {
             display: grid;
             gap: 10px;
@@ -105,6 +108,7 @@
             .grid-3 { grid-template-columns: repeat(3, 1fr); }
         }
 
+        /* Radio Buttons Responsivos */
         .radio-tile-group { display: flex; gap: 8px; width: 100%; }
         .radio-tile { flex: 1; }
         .radio-tile input { display: none; }
@@ -124,6 +128,11 @@
         }
         .radio-tile input:checked + label { background-color: #e8f5e9; border-color: var(--primary); color: var(--primary); font-weight: bold; }
 
+        .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+        .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: clamp(0.8rem, 1.8vw, 0.95rem); }
+        .checkbox-item input { width: 22px; height: 22px; flex-shrink: 0; }
+
+        /* Botões */
         .btn { 
             width: 100%; 
             padding: clamp(12px, 2vw, 16px); 
@@ -141,12 +150,15 @@
         .btn-whatsapp { background: #25d366; color: white; }
         .btn-danger { background: var(--danger); color: white; padding: 6px 10px; font-size: 0.75rem; width: auto; margin: 0; }
 
+        /* TABELA RESPONSIVA (VIRANDO CARDS EM TELAS PEQUENAS) */
         .table-container { width: 100%; overflow-x: auto; }
+        
         .records-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
         .records-table th, .records-table td { border: 1px solid var(--border); padding: 8px; text-align: left; }
         .records-table th { background: #eee; }
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: white; display: inline-block; }
         .badge-pending { background: #f57c00; }
+        .badge-sent { background: #388e3c; }
 
         @media (max-width: 500px) {
             .records-table, .records-table thead, .records-table tbody, .records-table th, .records-table td, .records-table tr { 
@@ -183,116 +195,267 @@
 
     <header>
         <h1>Apontamento Florestal</h1>
-        <small>Rastreabilidade FSC & Operações de Campo</small>
+        <small>Controle de Carga e Rastreabilidade</small>
     </header>
 
     <div id="status-bar" class="status-banner online">Conectado - Modo Online</div>
 
-    <form id="form-apontamento">
+    <form id="bcfForm">
+        <!-- 1. ORIGEM -->
         <div class="section-card">
-            <div class="section-title">1. Dados Operacionais</div>
-            <div class="grid-3">
+            <div class="section-title">1. Origem da Carga</div>
+            <div class="grid-2">
                 <div class="form-group">
-                    <label for="data">Data:</label>
-                    <input type="date" id="data" required>
-                </div>
-                <div class="form-group">
-                    <label for="talhao">Talhão / Projeto:</label>
-                    <input type="text" id="talhao" placeholder="Ex: Talhão 08" required>
-                </div>
-                <div class="form-group">
-                    <label for="operacao">Operação:</label>
-                    <select id="operacao" required>
+                    <label>Empresa/Unidade</label>
+                    <select id="empresa" required>
                         <option value="">Selecione...</option>
-                        <option value="Corte / Colheita">Corte / Colheita</option>
-                        <option value="Carregamento">Carregamento</option>
-                        <option value="Transporte">Transporte de Toras</option>
-                        <option value="Baldeio">Baldeio / Forwarder</option>
+                        <option value="Madeireira Seleme Ltda">Madeireira Seleme Ltda</option>
+                        <option value="CGS">CGS</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>BCF Nº</label>
+                    <input type="text" id="bcfNum" required placeholder="001234">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Fazenda</label>
+                    <select id="fazenda" required>
+                        <option value="">Selecione...</option>
+                        <option value="Bracatinga">Bracatinga</option>
+                        <option value="Capão Alto">Capão Alto</option>
+                        <option value="CGS1">CGS1</option>
+                        <option value="Cima Perdigão">Cima Perdigão</option>
+                        <option value="Estrada Velha">Estrada Velha</option>
+                        <option value="Fazenda Banhado Grande">Fazenda Banhado Grande</option>
+                        <option value="Irmã">Irmã</option>
+                        <option value="João Gordo">João Gordo</option>
+                        <option value="Perdigão">Perdigão</option>
+                        <option value="Sede">Sede</option>
+                        <option value="Triângulo">Triângulo</option>
+                        <option value="Xico">Xico</option>
+                        <option value="Xico Casa">Xico Casa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Projeto / Bloco</label>
+                    <input type="text" id="projeto">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Talhão</label>
+                    <input type="text" id="talhao" required placeholder="Ex: 12-A">
+                </div>
+                <div class="form-group">
+                    <label>Carreador / Pátio</label>
+                    <input type="text" id="carreador">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Status FSC</label>
+                <select id="statusFsc">
+                    <option value="100% Certificado">100% Certificado</option>
+                    <option value="Madeira Controlada">Madeira Controlada</option>
+                    <option value="Não Certificado">Não Certificado</option>
+                </select>
             </div>
         </div>
 
+        <!-- 2. PRODUTO E SORTIMENTO -->
         <div class="section-card">
-            <div class="section-title">2. Apontamento de Volume & Produto</div>
+            <div class="section-title">2. Produto / Sortimento</div>
+            <div class="form-group">
+                <label>Gênero / Espécie</label>
+                <div class="radio-tile-group">
+                    <div class="radio-tile">
+                        <input type="radio" id="spPinus" name="especie" value="Pinus" checked>
+                        <label for="spPinus">Pinus</label>
+                    </div>
+                    <div class="radio-tile">
+                        <input type="radio" id="spEuca" name="especie" value="Eucalipto">
+                        <label for="spEuca">Eucalipto</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Classe Diamétrica / Sortimento</label>
+                <select id="sortimento" required>
+                    <option value="Celulose/Processo (8,0 a 15,9 cm)">Celulose/Processo (8,0 a 15,9 cm)</option>
+                    <option value="Toretes (16,0 a 22,9 cm)">Toretes (16,0 a 22,9 cm)</option>
+                    <option value="Toras Serraria (23,0 a 32,9 cm)">Toras Serraria (23,0 a 32,9 cm)</option>
+                    <option value="Toras Serraria (33,0 cm acima)">Toras Serraria (33,0 cm acima)</option>
+                    <option value="Toras (6 a 55 cm)">Toras (6 a 55 cm)</option>
+                    <option value="Biomassa / Casca / Cavaco">Biomassa / Casca / Cavaco</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Comprimento das Toras (m)</label>
+                <select id="comprimento" required>
+                    <option value="2,40m">2,40m</option>
+                    <option value="2,55m">2,55m</option>
+                    <option value="2,65m">2,65m</option>
+                    <option value="3,05m">3,05m</option>
+                    <option value="6,00m">6,00m</option>
+                    <option value="Outro">Outro</option>
+                </select>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Vol. Estimado (m³st)</label>
+                    <input type="number" id="volumeEst" step="0.1" required placeholder="Ex: 48.5">
+                </div>
+                <div class="form-group">
+                    <label>Cliente / Destino</label>
+                    <select id="destinoSelect" onchange="tratarSelecaoDestino()" required>
+                        <option value="">Selecione...</option>
+                        <option value="ANTUNES & ASSOLINI LTDA">ANTUNES & ASSOLINI LTDA</option>
+                        <option value="DANI IND DE MADEIRAS LTDA">DANI IND DE MADEIRAS LTDA</option>
+                        <option value="IJ MADEIREIRA LTDA">IJ MADEIREIRA LTDA</option>
+                        <option value="MAXI MADEIRAS LTDA">MAXI MADEIRAS LTDA</option>
+                        <option value="PLACA COMERCIO DE MADEIRAS E COMPENSADOS LTDA">PLACA COMERCIO DE MADEIRAS E COMPENSADOS LTDA</option>
+                        <option value="PRIMO TEDESCO SA">PRIMO TEDESCO SA</option>
+                        <option value="R DE LUCA INDÚSTRIA E COMERCIO LTDA">R DE LUCA INDÚSTRIA E COMERCIO LTDA</option>
+                        <option value="WESTROCK,CELULOSE, PAPEL E EMBALAGENS LTDA">WESTROCK,CELULOSE, PAPEL E EMBALAGENS LTDA</option>
+                        <option value="OUTRO">OUTRO</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group hidden" id="grupoOutroDestino">
+                <label>Digite o Nome do Cliente / Destino:</label>
+                <input type="text" id="destinoOutroInput" placeholder="Digite o nome da empresa/destino">
+            </div>
+        </div>
+
+        <!-- 3. TRANSPORTE E EQUIPAMENTO -->
+        <div class="section-card">
+            <div class="section-title">3. Transporte & Equipamento</div>
+            <div class="form-group">
+                <label>Transportadora</label>
+                <select id="transportadora" required>
+                    <option value="">Selecione...</option>
+                    <option value="ANDREIA PARIZOTTO ZANCANARO">ANDREIA PARIZOTTO ZANCANARO</option>
+                    <option value="ANTUNES & ASSOLINI LTDA">ANTUNES & ASSOLINI LTDA</option>
+                    <option value="IJ MADEIREIRA LTDA">IJ MADEIREIRA LTDA</option>
+                    <option value="DANI IND DE MADEIRAS LTDA">DANI IND DE MADEIRAS LTDA</option>
+                </select>
+            </div>
             <div class="grid-3">
                 <div class="form-group">
-                    <label for="especie">Espécie:</label>
-                    <select id="especie" required>
-                        <option value="Pinus taeda">Pinus taeda</option>
-                        <option value="Pinus elliottii">Pinus elliottii</option>
-                        <option value="Eucalyptus spp">Eucalyptus spp</option>
-                        <option value="Nativa">Nativa (Autorizada)</option>
-                    </select>
+                    <label>Cavalo</label>
+                    <input type="text" id="placaCavalo" required placeholder="ABC1D23">
                 </div>
                 <div class="form-group">
-                    <label for="volume">Volume (m³):</label>
-                    <input type="number" id="volume" step="0.01" placeholder="0.00" required>
+                    <label>Reboque 1</label>
+                    <input type="text" id="placaReboque1">
                 </div>
                 <div class="form-group">
-                    <label for="maquina">Equipamento / Placa:</label>
-                    <input type="text" id="maquina" placeholder="Ex: Harvester 01 / ABC-1234" required>
+                    <label>Reboque 2</label>
+                    <input type="text" id="placaReboque2">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Motorista</label>
+                    <input type="text" id="motorista" required>
+                </div>
+                <div class="form-group">
+                    <label>Nota Fiscal Nº</label>
+                    <input type="text" id="notaFiscal" placeholder="NF-e">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Equipamento de Carga</label>
+                <select id="equipamentoCarga">
+                    <option value="Forwarder">Forwarder</option>
+                    <option value="Autocarregável">Autocarregável</option>
+                    <option value="Garra">Garra</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Operador do Carregador</label>
+                <input type="text" id="operador">
+            </div>
+        </div>
+
+        <!-- 4. CHECKLIST -->
+        <div class="section-card">
+            <div class="section-title">4. Checklist de Segurança</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="chkAmarracao" checked>
+                    <label for="chkAmarracao">Cintas e catracas tensionadas e travadas</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="chkFuso" checked>
+                    <label for="chkFuso">Painel e fogueiras dentro do fuso</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="chkLimpeza" checked>
+                    <label for="chkLimpeza">Carga limpa (sem resíduos soltos)</label>
                 </div>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Salvar Apontamento Offline</button>
+        <button type="submit" class="btn btn-primary">💾 Salvar Apontamento Offline</button>
     </form>
 
+    <!-- REGISTROS ARMAZENADOS NO CELULAR -->
     <div class="section-card" style="margin-top: 20px;">
-        <div class="section-title">3. Registros Salvos no Celular</div>
+        <div class="section-title">Cargas Registradas no Celular</div>
         <div class="table-container">
             <table class="records-table">
                 <thead>
                     <tr>
-                        <th>Data</th>
-                        <th>Talhão</th>
-                        <th>Operação</th>
-                        <th>Volume</th>
+                        <th>BCF</th>
+                        <th>Placa</th>
+                        <th>Vol (st)</th>
                         <th>Status</th>
-                        <th>Ação</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
-                <tbody id="lista-registros">
-                    <!-- Registros inseridos via JS -->
-                </tbody>
+                <tbody id="listaRegistros"></tbody>
             </table>
         </div>
-        <button id="btn-exportar" class="btn btn-whatsapp" style="margin-top: 15px;">Exportar para WhatsApp / Excel</button>
+        <button onclick="transmitirConsolidadoDia()" class="btn btn-whatsapp" style="margin-top: 12px;">
+            📲 Transmitir Relatório do Dia via WhatsApp
+        </button>
     </div>
 
     <script>
-        // Configuração do IndexedDB Local
-        let db;
-        const request = indexedDB.open("ApontamentoFlorestalDB", 1);
+        // NÚMERO DO WHATSAPP FIXO (DDD 49 - BRASIL)
+        const DESTINO_WHATSAPP = "5549999220040";
 
-        request.onupgradeneeded = (e) => {
+        // BANCO DE DADOS LOCAL (IndexedDB)
+        let db;
+        const request = indexedDB.open("LogisticaFlorestalDB", 1);
+
+        request.onupgradeneeded = function(e) {
             db = e.target.result;
             if (!db.objectStoreNames.contains("apontamentos")) {
-                db.createObjectStore("apontamentos", { keyPath: "id", autoIncrement: true });
+                const store = db.createObjectStore("apontamentos", { keyPath: "id", autoIncrement: true });
+                store.createIndex("status", "status", { unique: false });
             }
         };
 
-        request.onsuccess = (e) => {
+        request.onsuccess = function(e) {
             db = e.target.result;
-            carregarRegistros();
+            renderizarTabela();
         };
 
-        request.onerror = (e) => {
-            console.error("Erro ao abrir IndexedDB:", e);
-        };
-
-        // Data Atual Padrão
-        document.getElementById('data').valueAsDate = new Date();
-
-        // Monitoramento de Conexão Online/Offline
+        // MONITORA STATUS DE CONEXÃO ONLINE / OFFLINE
         function updateStatus() {
             const bar = document.getElementById('status-bar');
             if (navigator.onLine) {
                 bar.textContent = "Conectado - Modo Online";
                 bar.className = "status-banner online";
             } else {
-                bar.textContent = "Offline - Apontamentos salvos na memória local";
+                bar.textContent = "Offline - Registros salvos na memória local";
                 bar.className = "status-banner offline";
             }
         }
@@ -300,52 +463,98 @@
         window.addEventListener('offline', updateStatus);
         updateStatus();
 
-        // Salvar Apontamento no IndexedDB
-        document.getElementById('form-apontamento').addEventListener('submit', (e) => {
+        // LÓGICA DE EXIBIÇÃO DO CAMPO OUTRO DESTINO
+        function tratarSelecaoDestino() {
+            const select = document.getElementById("destinoSelect");
+            const grupoOutro = document.getElementById("grupoOutroDestino");
+            const inputOutro = document.getElementById("destinoOutroInput");
+
+            if (select.value === "OUTRO") {
+                grupoOutro.classList.remove("hidden");
+                inputOutro.setAttribute("required", "required");
+                inputOutro.focus();
+            } else {
+                grupoOutro.classList.add("hidden");
+                inputOutro.removeAttribute("required");
+                inputOutro.value = "";
+            }
+        }
+
+        // SALVAR APONTAMENTO NO INDEXEDDB
+        document.getElementById("bcfForm").addEventListener("submit", function(e) {
             e.preventDefault();
-            const novoRegistro = {
-                data: document.getElementById('data').value,
-                talhao: document.getElementById('talhao').value,
-                operacao: document.getElementById('operacao').value,
-                especie: document.getElementById('especie').value,
-                volume: parseFloat(document.getElementById('volume').value),
-                maquina: document.getElementById('maquina').value,
-                dataRegistro: new Date().toLocaleString('pt-BR')
+
+            const destinoSelectVal = document.getElementById("destinoSelect").value;
+            const destinoFinal = (destinoSelectVal === "OUTRO") 
+                ? document.getElementById("destinoOutroInput").value 
+                : destinoSelectVal;
+
+            const record = {
+                dataHora: new Date().toLocaleString("pt-BR"),
+                empresa: document.getElementById("empresa").value,
+                bcfNum: document.getElementById("bcfNum").value,
+                fazenda: document.getElementById("fazenda").value,
+                projeto: document.getElementById("projeto").value,
+                talhao: document.getElementById("talhao").value,
+                carreador: document.getElementById("carreador").value,
+                statusFsc: document.getElementById("statusFsc").value,
+                especie: document.querySelector('input[name="especie"]:checked').value,
+                sortimento: document.getElementById("sortimento").value,
+                comprimento: document.getElementById("comprimento").value,
+                volumeEst: document.getElementById("volumeEst").value,
+                destino: destinoFinal,
+                transportadora: document.getElementById("transportadora").value,
+                placaCavalo: document.getElementById("placaCavalo").value.toUpperCase(),
+                placaReboque1: document.getElementById("placaReboque1").value.toUpperCase(),
+                placaReboque2: document.getElementById("placaReboque2").value.toUpperCase(),
+                motorista: document.getElementById("motorista").value,
+                notaFiscal: document.getElementById("notaFiscal").value,
+                equipamentoCarga: document.getElementById("equipamentoCarga").value,
+                operador: document.getElementById("operador").value,
+                checklistOk: document.getElementById("chkAmarracao").checked && document.getElementById("chkFuso").checked && document.getElementById("chkLimpeza").checked,
+                status: "Pendente"
             };
 
             const tx = db.transaction("apontamentos", "readwrite");
             const store = tx.objectStore("apontamentos");
-            store.add(novoRegistro);
+            store.add(record);
 
-            tx.oncomplete = () => {
-                alert("Apontamento salvo localmente com sucesso!");
-                document.getElementById('form-apontamento').reset();
-                document.getElementById('data').valueAsDate = new Date();
-                carregarRegistros();
+            tx.oncomplete = function() {
+                alert("Apontamento BCF Nº " + record.bcfNum + " salvo no celular com sucesso!");
+                document.getElementById("bcfNum").value = "";
+                document.getElementById("placaCavalo").value = "";
+                document.getElementById("volumeEst").value = "";
+                document.getElementById("destinoSelect").value = "";
+                tratarSelecaoDestino();
+                renderizarTabela();
             };
         });
 
-        // Renderizar registros na tabela
-        function carregarRegistros() {
-            const tbody = document.getElementById('lista-registros');
-            tbody.innerHTML = '';
+        // RENDERIZAR TABELA RESPONSIVA COM DATA-LABELS
+        function renderizarTabela() {
+            const tbody = document.getElementById("listaRegistros");
+            tbody.innerHTML = "";
 
             const tx = db.transaction("apontamentos", "readonly");
             const store = tx.objectStore("apontamentos");
-            const request = store.openCursor();
+            const request = store.openCursor(null, "prev");
 
-            request.onsuccess = (e) => {
+            request.onsuccess = function(e) {
                 const cursor = e.target.result;
                 if (cursor) {
-                    const r = cursor.value;
-                    const tr = document.createElement('tr');
+                    const item = cursor.value;
+                    const tr = document.createElement("tr");
+                    const badgeClass = item.status === "Pendente" ? "badge-pending" : "badge-sent";
+
                     tr.innerHTML = `
-                        <td data-label="Data">${r.data}</td>
-                        <td data-label="Talhão">${r.talhao}</td>
-                        <td data-label="Operação">${r.operacao}</td>
-                        <td data-label="Volume">${r.volume} m³</td>
-                        <td data-label="Status"><span class="badge badge-pending">Salvo Local</span></td>
-                        <td data-label="Ação"><button class="btn-danger" onclick="excluirRegistro(${cursor.key})">Excluir</button></td>
+                        <td data-label="BCF Nº"><b>${item.bcfNum}</b></td>
+                        <td data-label="Placa">${item.placaCavalo}</td>
+                        <td data-label="Vol. (m³st)">${item.volumeEst}</td>
+                        <td data-label="Status"><span class="badge ${badgeClass}">${item.status}</span></td>
+                        <td data-label="Ações">
+                            <button onclick="enviarWhatsappIndividal(${item.id})" class="btn-whatsapp" style="padding:6px 12px; border:none; border-radius:4px; cursor:pointer;">📲 Transmitir</button>
+                            <button onclick="deletarRegistro(${item.id})" class="btn-danger">X</button>
+                        </td>
                     `;
                     tbody.appendChild(tr);
                     cursor.continue();
@@ -353,42 +562,83 @@
             };
         }
 
-        // Excluir Registro
-        window.excluirRegistro = function(id) {
-            if (confirm("Deseja realmente excluir este apontamento?")) {
-                const tx = db.transaction("apontamentos", "readwrite");
-                const store = tx.objectStore("apontamentos");
-                store.delete(id);
-                tx.oncomplete = () => carregarRegistros();
-            }
-        };
+        // ENVIAR BCF ÚNICO VIA WHATSAPP
+        function enviarWhatsappIndividal(id) {
+            const tx = db.transaction("apontamentos", "readwrite");
+            const store = tx.objectStore("apontamentos");
+            const request = store.get(id);
 
-        // Exportar para Relatório/WhatsApp
-        document.getElementById('btn-exportar').addEventListener('click', () => {
+            request.onsuccess = function() {
+                const item = request.result;
+                let msg = `🌲 *BOLETIM DE CARREGAMENTO (BCF Nº ${item.bcfNum})* 🌲%0A`;
+                msg += `-----------------------------------------%0A`;
+                msg += `*Empresa:* ${item.empresa}%0A`;
+                msg += `*Data/Hora:* ${item.dataHora}%0A`;
+                msg += `*Fazenda:* ${item.fazenda} | *Talhão:* ${item.talhao}%0A`;
+                msg += `*FSC:* ${item.statusFsc}%0A`;
+                msg += `-----------------------------------------%0A`;
+                msg += `*Produto:* ${item.especie} - ${item.sortimento}%0A`;
+                msg += `*Comprimento:* ${item.comprimento}%0A`;
+                msg += `*Vol. Estimado:* ${item.volumeEst} m³st%0A`;
+                msg += `*Destino:* ${item.destino}%0A`;
+                msg += `-----------------------------------------%0A`;
+                msg += `*Transp:* ${item.transportadora}%0A`;
+                msg += `*Placas:* ${item.placaCavalo} / ${item.placaReboque1}%0A`;
+                msg += `*Motorista:* ${item.motorista}%0A`;
+                msg += `*NF Nº:* ${item.notaFiscal || 'N/A'}%0A`;
+                msg += `*Equip/Operador:* ${item.equipamentoCarga} / ${item.operador}%0A`;
+                msg += `*Checklist Seg:* ${item.checklistOk ? 'CONFORME' : 'COM RESTRIÇÃO'}`;
+
+                item.status = "Enviado";
+                store.put(item);
+
+                window.open(`https://wa.me/${DESTINO_WHATSAPP}?text=${msg}`, "_blank");
+                renderizarTabela();
+            };
+        }
+
+        // ENVIAR RELATÓRIO CONSOLIDADO DO DIA VIA WHATSAPP
+        function transmitirConsolidadoDia() {
             const tx = db.transaction("apontamentos", "readonly");
             const store = tx.objectStore("apontamentos");
             const request = store.getAll();
 
-            request.onsuccess = () => {
-                const dados = request.result;
-                if (dados.length === 0) {
-                    alert("Nenhum registro encontrado para exportar.");
+            request.onsuccess = function() {
+                const lista = request.result;
+                if(lista.length === 0) {
+                    alert("Nenhum registro para enviar.");
                     return;
                 }
 
-                let texto = "*RELATÓRIO DE APONTAMENTO FLORESTAL*\n\n";
-                dados.forEach((item, index) => {
-                    texto += `*${index + 1}. ${item.talhao}* (${item.data})\n`;
-                    texto += `• Operação: ${item.operacao}\n`;
-                    texto += `• Produto/Espécie: ${item.especie}\n`;
-                    texto += `• Volume: ${item.volume} m³\n`;
-                    texto += `• Equipamento: ${item.maquina}\n\n`;
+                let totalVol = 0;
+                let msg = `📊 *RESUMO DIÁRIO DE CARREGAMENTO* 📊%0A`;
+                msg += `Data da Transmissão: ${new Date().toLocaleDateString('pt-BR')}%0A`;
+                msg += `-----------------------------------------%0A`;
+
+                lista.forEach((item, index) => {
+                    totalVol += parseFloat(item.volumeEst || 0);
+                    msg += `${index+1}. *BCF:* ${item.bcfNum} | *Faz:* ${item.fazenda} | *Placa:* ${item.placaCavalo} | *Vol:* ${item.volumeEst}m³st | *Dest:* ${item.destino}%0A`;
                 });
 
-                const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
-                window.open(url, '_blank');
+                msg += `-----------------------------------------%0A`;
+                msg += `*TOTAL DE CARGAS:* ${lista.length}%0A`;
+                msg += `*VOLUME TOTAL ESTIMADO:* ${totalVol.toFixed(1)} m³st`;
+
+                window.open(`https://wa.me/${DESTINO_WHATSAPP}?text=${msg}`, "_blank");
             };
-        });
+        }
+
+        // DELETAR REGISTRO LOCAL
+        function deletarRegistro(id) {
+            if(confirm("Deseja remover este registro localmente?")) {
+                const tx = db.transaction("apontamentos", "readwrite");
+                const store = tx.objectStore("apontamentos");
+                store.delete(id);
+                tx.oncomplete = function() {
+                    renderizarTabela();
+                };
+            }
+        }
 
         // REGISTRO DO SERVICE WORKER (PWA)
         if ('serviceWorker' in navigator) {
