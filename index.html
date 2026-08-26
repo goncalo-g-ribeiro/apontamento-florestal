@@ -81,6 +81,7 @@
 
         .form-group { margin-bottom: 14px; }
         label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #333; }
+        .required-mark { color: var(--danger); font-weight: bold; }
         
         input[type="text"], input[type="number"], select { 
             width: 100%; 
@@ -93,7 +94,6 @@
         }
         input:focus, select:focus { border-color: var(--primary); outline: none; background-color: #fff; }
 
-        /* GRIDS RESPONSIVOS (MOBILE-FIRST) */
         .grid-2, .grid-3 {
             display: grid;
             gap: 12px;
@@ -109,7 +109,6 @@
             .grid-3 { grid-template-columns: repeat(3, 1fr); }
         }
 
-        /* Radio Buttons Responsivos */
         .radio-tile-group { display: flex; gap: 10px; width: 100%; }
         .radio-tile { flex: 1; }
         .radio-tile input { display: none; }
@@ -133,7 +132,6 @@
         .checkbox-item { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; }
         .checkbox-item input { width: 24px; height: 24px; flex-shrink: 0; }
 
-        /* ÁREA DE ASSINATURA DIGITÁL */
         .signature-container {
             border: 2px dashed var(--primary-light);
             border-radius: 8px;
@@ -170,7 +168,6 @@
             background: #fff;
         }
 
-        /* Botões */
         .btn { 
             width: 100%; 
             padding: 14px; 
@@ -188,9 +185,7 @@
         .btn-whatsapp { background: #25d366; color: white; }
         .btn-danger { background: var(--danger); color: white; padding: 6px 12px; font-size: 0.8rem; width: auto; margin: 0; border-radius: 4px; }
 
-        /* TABELA RESPONSIVA EM CARDS EM TELAS ATÉ 600PX */
         .table-container { width: 100%; overflow-x: auto; }
-        
         .records-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
         .records-table th, .records-table td { border: 1px solid var(--border); padding: 10px; text-align: left; }
         .records-table th { background: #eee; }
@@ -245,7 +240,7 @@
             <div class="section-title">1. Origem da Carga</div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Empresa/Unidade</label>
+                    <label>Empresa/Unidade <span class="required-mark">*</span></label>
                     <select id="empresa" required>
                         <option value="">Selecione...</option>
                         <option value="Madeireira Seleme Ltda">Madeireira Seleme Ltda</option>
@@ -253,13 +248,13 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>BCF Nº</label>
-                    <input type="text" id="bcfNum" required placeholder="001234">
+                    <label>BCF Nº <span class="required-mark">*</span></label>
+                    <input type="text" id="bcfNum" required placeholder="000001">
                 </div>
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Fazenda</label>
+                    <label>Fazenda <span class="required-mark">*</span></label>
                     <select id="fazenda" required>
                         <option value="">Selecione...</option>
                         <option value="Bracatinga">Bracatinga</option>
@@ -284,7 +279,7 @@
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Talhão</label>
+                    <label>Talhão <span class="required-mark">*</span></label>
                     <input type="text" id="talhao" required placeholder="Ex: 12-A">
                 </div>
                 <div class="form-group">
@@ -316,7 +311,7 @@
             </div>
 
             <div class="form-group">
-                <label>Classe Diamétrica / Sortimento</label>
+                <label>Classe Diamétrica / Sortimento <span class="required-mark">*</span></label>
                 <select id="sortimento" required>
                     <option value="Celulose/Processo (8,0 a 15,9 cm)">Celulose/Processo (8,0 a 15,9 cm)</option>
                     <option value="Toretes (16,0 a 22,9 cm)">Toretes (16,0 a 22,9 cm)</option>
@@ -328,7 +323,7 @@
             </div>
 
             <div class="form-group">
-                <label>Comprimento das Toras (m)</label>
+                <label>Comprimento das Toras (m) <span class="required-mark">*</span></label>
                 <select id="comprimento" required>
                     <option value="2,40m">2,40m</option>
                     <option value="2,55m">2,55m</option>
@@ -341,11 +336,11 @@
 
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Vol. Estimado (m³st)</label>
+                    <label>Vol. Estimado (m³st) <span class="required-mark">*</span></label>
                     <input type="number" id="volumeEst" step="0.1" required placeholder="Ex: 48.5">
                 </div>
                 <div class="form-group">
-                    <label>Cliente / Destino</label>
+                    <label>Cliente / Destino <span class="required-mark">*</span></label>
                     <select id="destinoSelect" onchange="tratarSelecaoDestino()" required>
                         <option value="">Selecione...</option>
                         <option value="ANTUNES & ASSOLINI LTDA">ANTUNES & ASSOLINI LTDA</option>
@@ -362,7 +357,7 @@
             </div>
 
             <div class="form-group hidden" id="grupoOutroDestino">
-                <label>Digite o Nome do Cliente / Destino:</label>
+                <label>Digite o Nome do Cliente / Destino <span class="required-mark">*</span></label>
                 <input type="text" id="destinoOutroInput" placeholder="Digite o nome da empresa/destino">
             </div>
         </div>
@@ -371,7 +366,7 @@
         <div class="section-card">
             <div class="section-title">3. Transporte & Equipamento</div>
             <div class="form-group">
-                <label>Transportadora</label>
+                <label>Transportadora <span class="required-mark">*</span></label>
                 <select id="transportadora" required>
                     <option value="">Selecione...</option>
                     <option value="ANDREIA PARIZOTTO ZANCANARO">ANDREIA PARIZOTTO ZANCANARO</option>
@@ -382,7 +377,7 @@
             </div>
             <div class="grid-3">
                 <div class="form-group">
-                    <label>Cavalo</label>
+                    <label>Cavalo <span class="required-mark">*</span></label>
                     <input type="text" id="placaCavalo" required placeholder="ABC1D23">
                 </div>
                 <div class="form-group">
@@ -396,12 +391,12 @@
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Motorista</label>
+                    <label>Motorista <span class="required-mark">*</span></label>
                     <input type="text" id="motorista" required placeholder="Nome do motorista">
                 </div>
                 <div class="form-group">
-                    <label>Nota Fiscal Nº</label>
-                    <input type="text" id="notaFiscal" placeholder="NF-e">
+                    <label>Nota Fiscal Nº <span class="required-mark">*</span></label>
+                    <input type="text" id="notaFiscal" required placeholder="Digite a NF-e">
                 </div>
             </div>
             <div class="form-group">
@@ -413,7 +408,6 @@
                 </select>
             </div>
 
-            <!-- CAMPO DE ASSINATURA DO MOTORISTA -->
             <div class="form-group">
                 <label>Assinatura do Motorista</label>
                 <div class="signature-container">
@@ -487,6 +481,7 @@
         request.onsuccess = function(e) {
             db = e.target.result;
             renderizarTabela();
+            obterProximoBCF();
         };
 
         function updateStatus() {
@@ -503,7 +498,27 @@
         window.addEventListener('offline', updateStatus);
         updateStatus();
 
-        // LOGICA DE CAPTURA DA ASSINATURA EM CANVAS
+        function obterProximoBCF() {
+            const tx = db.transaction("apontamentos", "readonly");
+            const store = tx.objectStore("apontamentos");
+            const request = store.openCursor(null, "prev");
+
+            request.onsuccess = function(e) {
+                const cursor = e.target.result;
+                let proximoNumero = 1;
+
+                if (cursor) {
+                    const ultimoBcfStr = cursor.value.bcfNum;
+                    const ultimoBcfNum = parseInt(ultimoBcfStr, 10);
+                    if (!isNaN(ultimoBcfNum)) {
+                        proximoNumero = ultimoBcfNum + 1;
+                    }
+                }
+                
+                document.getElementById("bcfNum").value = String(proximoNumero).padStart(6, '0');
+            };
+        }
+
         const canvas = document.getElementById('signatureCanvas');
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
@@ -583,6 +598,22 @@
         document.getElementById("bcfForm").addEventListener("submit", function(e) {
             e.preventDefault();
 
+            const bcfNumVal = document.getElementById("bcfNum").value.trim();
+            const notaFiscalVal = document.getElementById("notaFiscal").value.trim();
+
+            // TRAVAS DE VALIDAÇÃO
+            if (!bcfNumVal) {
+                alert("Erro: O campo 'BCF Nº' é obrigatório.");
+                document.getElementById("bcfNum").focus();
+                return;
+            }
+
+            if (!notaFiscalVal) {
+                alert("Erro: O campo 'Nota Fiscal Nº' é obrigatório para salvar o registro.");
+                document.getElementById("notaFiscal").focus();
+                return;
+            }
+
             const destinoSelectVal = document.getElementById("destinoSelect").value;
             const destinoFinal = (destinoSelectVal === "OUTRO") 
                 ? document.getElementById("destinoOutroInput").value 
@@ -593,7 +624,7 @@
             const record = {
                 dataHora: new Date().toLocaleString("pt-BR"),
                 empresa: document.getElementById("empresa").value,
-                bcfNum: document.getElementById("bcfNum").value,
+                bcfNum: bcfNumVal,
                 fazenda: document.getElementById("fazenda").value,
                 projeto: document.getElementById("projeto").value,
                 talhao: document.getElementById("talhao").value,
@@ -608,7 +639,7 @@
                 placaReboque1: document.getElementById("placaReboque1").value.toUpperCase(),
                 placaReboque2: document.getElementById("placaReboque2").value.toUpperCase(),
                 motorista: document.getElementById("motorista").value,
-                notaFiscal: document.getElementById("notaFiscal").value,
+                notaFiscal: notaFiscalVal,
                 equipamentoCarga: document.getElementById("equipamentoCarga").value,
                 assinatura: assinaturaBase64,
                 checklistOk: document.getElementById("chkAmarracao").checked && document.getElementById("chkFuso").checked && document.getElementById("chkLimpeza").checked,
@@ -621,13 +652,14 @@
 
             tx.oncomplete = function() {
                 alert("Apontamento BCF Nº " + record.bcfNum + " salvo no celular com sucesso!");
-                document.getElementById("bcfNum").value = "";
+                document.getElementById("notaFiscal").value = "";
                 document.getElementById("placaCavalo").value = "";
                 document.getElementById("volumeEst").value = "";
                 document.getElementById("destinoSelect").value = "";
                 limparAssinatura();
                 tratarSelecaoDestino();
                 renderizarTabela();
+                obterProximoBCF();
             };
         });
 
@@ -689,7 +721,7 @@
                 msg += `*Placas:* ${item.placaCavalo} / ${item.placaReboque1}%0A`;
                 msg += `*Motorista:* ${item.motorista}%0A`;
                 msg += `*Assinatura:* ${item.assinatura ? 'COLETADA NO APP' : 'NÃO COLETADA'}%0A`;
-                msg += `*NF Nº:* ${item.notaFiscal || 'N/A'}%0A`;
+                msg += `*NF Nº:* ${item.notaFiscal}%0A`;
                 msg += `*Equipamento:* ${item.equipamentoCarga}%0A`;
                 msg += `*Checklist Seg:* ${item.checklistOk ? 'CONFORME' : 'COM RESTRIÇÃO'}`;
 
@@ -738,6 +770,7 @@
                 store.delete(id);
                 tx.oncomplete = function() {
                     renderizarTabela();
+                    obterProximoBCF();
                 };
             }
         }
